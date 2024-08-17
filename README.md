@@ -1,3 +1,8 @@
+# Software
+Requires
+ - Preferrably a Linux machine to run this code.
+ - NodeJS 18 or above (preferrably use nvm to manage npm and node).
+
 # Original template: Remix Indie Stack
 Created with:
 ```sh
