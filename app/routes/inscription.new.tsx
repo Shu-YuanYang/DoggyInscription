@@ -3,12 +3,10 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 
-import { getTest } from "~/models/inscription.server";
+import { createFakeInscription, getFakeWallet } from "~/models/inscription.server";
 import { requireUserId } from "~/session.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  /*
-  const userId = await requireUserId(request);
 
   const formData = await request.formData();
   const walletAddr = formData.get("walletAddr");
@@ -16,20 +14,29 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (typeof walletAddr !== "string" || walletAddr.length === 0) {
     return json(
-      { errors: { body: null, title: "Please enter your wallet address!" } },
+      { errors: { text: null, walletAddr: "Please enter your wallet address!" } },
       { status: 400 },
     );
   }
 
   if (typeof text !== "string" || text.length === 0) {
     return json(
-      { errors: { body: "Please enter some text to inscribe!", title: null } },
+      { errors: { text: "Please enter some text to inscribe!", walletAddr: null } },
       { status: 400 },
     );
   }
-  */
+  
+  
+
   //const note = await createNote({ body, title, userId });
-  const test_result = await getTest(request);
+  const verifiedWallet = await getFakeWallet({ address: walletAddr });
+  if (verifiedWallet.address !== walletAddr) {
+    return json(
+      { errors: { text: null, walletAddr: "Invalid wallet address!" } },
+      { status: 400 },
+    );
+  }
+  const test_result = await createFakeInscription({ type: "text/plain;charset=utf8", data: text, walletAddr: walletAddr, gasFee: "0.264 DOGE" });
 
   return redirect(`/`);
   //return test_result;
@@ -37,14 +44,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function NewInscriptionPage() {
   const actionData = useActionData<typeof action>();
-  const titleRef = useRef<HTMLInputElement>(null);
-  const bodyRef = useRef<HTMLTextAreaElement>(null);
+  const walletAddrRef = useRef<HTMLInputElement>(null);
+  const textRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (actionData?.errors?.title) {
-      titleRef.current?.focus();
-    } else if (actionData?.errors?.body) {
-      bodyRef.current?.focus();
+    if (actionData?.errors?.walletAddr) {
+      walletAddrRef.current?.focus();
+    } else if (actionData?.errors?.text) {
+      textRef.current?.focus();
     }
   }, [actionData]);
 
@@ -61,41 +68,41 @@ export default function NewInscriptionPage() {
     >
       <div>
         <label className="flex w-full flex-col gap-1">
-          <span>Title: </span>
+          <span>Wallet Address: </span>
           <input
-            ref={titleRef}
-            name="title"
+            ref={walletAddrRef}
+            name="walletAddr"
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
-            aria-invalid={actionData?.errors?.title ? true : undefined}
+            aria-invalid={actionData?.errors?.walletAddr ? true : undefined}
             aria-errormessage={
-              actionData?.errors?.title ? "title-error" : undefined
+              actionData?.errors?.walletAddr ? "wallet-addr-error" : undefined
             }
           />
         </label>
-        {actionData?.errors?.title ? (
-          <div className="pt-1 text-red-700" id="title-error">
-            {actionData.errors.title}
+        {actionData?.errors?.walletAddr ? (
+          <div className="pt-1 text-red-700" id="wallet-addr-error">
+            {actionData.errors.walletAddr}
           </div>
         ) : null}
       </div>
 
       <div>
         <label className="flex w-full flex-col gap-1">
-          <span>Body: </span>
+          <span>Text: </span>
           <textarea
-            ref={bodyRef}
-            name="body"
+            ref={textRef}
+            name="text"
             rows={8}
             className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
-            aria-invalid={actionData?.errors?.body ? true : undefined}
+            aria-invalid={actionData?.errors?.text ? true : undefined}
             aria-errormessage={
-              actionData?.errors?.body ? "body-error" : undefined
+              actionData?.errors?.text ? "text-error" : undefined
             }
           />
         </label>
-        {actionData?.errors?.body ? (
-          <div className="pt-1 text-red-700" id="body-error">
-            {actionData.errors.body}
+        {actionData?.errors?.text ? (
+          <div className="pt-1 text-red-700" id="text-error">
+            {actionData.errors.text}
           </div>
         ) : null}
       </div>

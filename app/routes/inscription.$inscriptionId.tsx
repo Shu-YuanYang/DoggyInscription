@@ -8,18 +8,18 @@ import {
 } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { deleteNote, getNote } from "~/models/note.server";
+import { getFakeInscription } from "~/models/inscription.server";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const userId = await requireUserId(request);
-  invariant(params.noteId, "noteId not found");
+  //const userId = await requireUserId(request);
+  invariant(params.inscriptionId, "inscriptionId not found");
 
-  const note = await getNote({ id: params.noteId, userId });
-  if (!note) {
+  const inscription = await getFakeInscription({ hash: params.inscriptionId });
+  if (!inscription) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json({ note });
+  return json({ inscription });
 };
 
 
@@ -29,8 +29,15 @@ export default function InscriptionDetailsPage() {
 
   return (
     <div>
-      <h3 className="text-2xl font-bold">{data.note.title}</h3>
-      <p className="py-6">{data.note.body}</p>
+      <h3 className="text-2xl font-bold">Inscription at: {data.inscription.timestamp}</h3>
+      <span className="py-6">Wallet Address: {data.inscription.walletAddr}</span>
+      <br />
+      <span className="py-6">Inscription Type: {data.inscription.type}</span>
+      <br />
+      <span className="py-6">Inscribed Data:</span>
+      <p className="">{data.inscription.data.toString()}</p>
+      <span>Transaction Fee: {data.inscription.gasFee}</span>
+      <span className="py-6">Transaction Hash: {data.inscription.hash}</span>
       <hr className="my-4" />
     </div>
   );

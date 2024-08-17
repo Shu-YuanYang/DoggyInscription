@@ -2,25 +2,25 @@ import type { MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
 import { json } from "@remix-run/node";
-import { useOptionalUser } from "~/utils";
-import { requireUserId } from "~/session.server";
-import { getNoteListItems } from "~/models/note.server";
+//import { useOptionalUser } from "~/utils";
+//import { requireUserId } from "~/session.server";
+import { getAllFakeInscriptionList } from "~/models/inscription.server";
 
 import NewInscriptionPage from "./inscription.new";
 import InscriptionListPage from "./inscription.list";
 
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userId = await requireUserId(request);
-  const noteListItems = await getNoteListItems({ userId });
-  return json({ noteListItems });
+  //const userId = await requireUserId(request);
+  const inscriptionList = await getAllFakeInscriptionList();
+  return json({ inscriptionList });
 };
 
 
 export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
 
 export default function Index() {
-  const user = useOptionalUser();
+  //const user = useOptionalUser();
   const data = useLoaderData<typeof loader>();
   //const user = useUser();
   
@@ -45,7 +45,7 @@ export default function Index() {
               </div>
 
 	      <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
-                <InscriptionListPage noteList={data.noteListItems} />
+                <InscriptionListPage inscriptionList={data.inscriptionList} />
               </div>
 
 
