@@ -13,11 +13,12 @@ export default function InscriptionListPage({ inscriptionList }: any[]) {
         gap: 8
       }}>
       
+      <span>Recent Inscriptions:</span>
       <main className="flex h-full w-full bg-white">
         <div className="h-full w-full border-r bg-gray-50">
-          <hr />
+	  <br />          
           {!inscriptionList || inscriptionList.length === 0 ? (
-            <p className="p-4">No notes yet</p>
+            <p className="p-4">No inscriptions yet</p>
           ) : (
             <ol>
               {inscriptionList.map((inscription) => (
