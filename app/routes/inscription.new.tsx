@@ -112,7 +112,7 @@ export default function NewInscriptionPage() {
           type="submit"
           className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
         >
-          Save
+          Inscribe
         </button>
       </div>
     </Form>

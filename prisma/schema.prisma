@@ -36,3 +36,32 @@ model Note {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 }
+
+
+model FakeWallet {
+  addressType		String
+  address		String @id
+  customHdPath		String
+  phrase		String
+  connectedSites	FakeConnectedSite[]
+  network		String
+  inscriptions		FakeInscription[]
+}
+
+model FakeConnectedSite {
+  site		String
+  wallet	FakeWallet @relation(fields: [walletAddr], references: [address], onDelete:Cascade, onUpdate: Cascade)
+  walletAddr	String
+
+  @@id([site, walletAddr])
+}
+
+model FakeInscription {
+  type		String
+  hash		String @id
+  data		String
+  wallet	FakeWallet @relation(fields: [walletAddr], references: [address], onDelete:Cascade, onUpdate: Cascade)
+  walletAddr	String
+  gasFee	String
+  timestamp	DateTime
+}

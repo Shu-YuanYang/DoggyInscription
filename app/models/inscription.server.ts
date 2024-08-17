@@ -1,3 +1,8 @@
+import type { FakeWallet, FakeInscription } from "@prisma/client";
+
+import { prisma } from "~/db.server";
+
+/*
 type FakeWallet = {
 	addressType: string,
 	address: string,
@@ -29,22 +34,22 @@ const FAKEWALLET: FakeWallet = {
 
 
 var inscriptionLst: FakeInscription[] = [];
+*/
 
 
 export function getFakeWallet({ address }: Pick<FakeWallet, "address">) {
-	return FAKEWALLET;
+	return prisma.fakeWallet.findUnique({ where: { address } });
 }
 
 export function getFakeInscription({ hash }: Pick<FakeInscription, "hash">) {
-	for (let i = 0; i < inscriptionLst.length; ++i) {
-		if (inscriptionLst[i].hash === hash) return inscriptionLst[i];
-	}
-	throw new Error(`No inscription found with hash: ${hash}`);
+	return prisma.fakeInscription.findUnique({ where: { hash } });
 }
 
 export function getAllFakeInscriptionList() {
-	inscriptionLst.sort(function(a, b) { return b.timestamp - a.timestamp });
-	return inscriptionLst;
+	return prisma.fakeInscription.findMany({
+		where: { },
+		orderBy: { timestamp: "desc" },
+	});
 }
 
 
@@ -72,16 +77,16 @@ export function createFakeInscription({
   walletAddr,
   gasFee
 }: Pick<FakeInscription, "type" | "data" | "walletAddr" | "gasFee">) {
-	let newInscription: FakeInscription = {
-		type: type,
-		data: data,
-		hash: makeid(105),
-		walletAddr: walletAddr,
-		gasFee: gasFee,
-		timestamp: new Date()
-	};
-	inscriptionLst.push(newInscription);
-	return newInscription;
+	return prisma.fakeInscription.create({
+		data: {
+			type: type,
+			data: data,
+			hash: makeid(105),
+			walletAddr: walletAddr,
+			gasFee: gasFee,
+			timestamp: new Date()
+		},
+	});
 }
 
 
