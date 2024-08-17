@@ -31,7 +31,16 @@ Click this button to create a [Gitpod](https://gitpod.io) workspace with the pro
 ## Development
 
 - Initial setup:
+  ```sh
+  npm install
+  ```
 
+- Create a .env file with the following test content:
+  ```sh
+  DATABASE_URL="file:./data.db?connection_limit=1"
+  SESSION_SECRET="47f3287bb4d7bd4959dd753cdb3cc3ef"
+  ```
+  
   ```sh
   npm run setup
   ```
