@@ -37,6 +37,7 @@ export default function InscriptionDetailsPage() {
       <span className="py-6">Inscribed Data:</span>
       <p className="">{data.inscription.data.toString()}</p>
       <span>Transaction Fee: {data.inscription.gasFee}</span>
+      <br />
       <span className="py-6">Transaction Hash: {data.inscription.hash}</span>
       <hr className="my-4" />
     </div>

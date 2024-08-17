@@ -1,9 +1,22 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
+import type { MetaFunction, ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { Link, Form, useLoaderData, useActionData } from "@remix-run/react";
+
+import type { FakeWallet } from "@prisma/client";
+import { getAllFakeInscriptionList, getFakeWallet, createFakeInscription } from "~/models/inscription.server";
 import { useEffect, useRef } from "react";
 
-import { createFakeInscription, getFakeWallet } from "~/models/inscription.server";
+//import NewInscriptionPage from "./inscription.new";
+import InscriptionListPage from "./inscription.list";
+
+
+
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  //const userId = await requireUserId(request);
+  const inscriptionList = await getAllFakeInscriptionList();
+  return json({ inscriptionList });
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 
@@ -24,20 +37,40 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       { status: 400 },
     );
   }
-  
-  const verifiedWallet = await getFakeWallet({ address: walletAddr });
-  if (verifiedWallet.address !== walletAddr) {
+
+  let verifiedWallet: FakeWallet = null;
+  try {
+    verifiedWallet = await getFakeWallet({ address: walletAddr });
+  } catch (err) {}
+
+  if (!verifiedWallet || verifiedWallet.address !== walletAddr) {
     return json(
       { errors: { text: null, walletAddr: "Invalid wallet address!" } },
       { status: 400 },
     );
   }
-  const test_result = await createFakeInscription({ type: "text/plain;charset=utf8", data: text, walletAddr: walletAddr, gasFee: "0.264 DOGE" });
 
-  return redirect("/inscription");
+  try {
+      const test_result = await createFakeInscription({ type: "text/plain;charset=utf8", data: text, walletAddr: walletAddr, gasFee: "300 DOGE" });
+  } catch (err) {
+      console.log(err.message);
+      return json(
+        { errors: { text: "Invalid transaction data!", walletAddr: null } },
+        { status: 400 },
+      );
+  }
+
+
+  return json({ status: 200 }); //redirect("/inscription");
 };
 
-export default function NewInscriptionPage() {
+export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
+
+
+
+
+
+function NewInscriptionForm() {
   const actionData = useActionData<typeof action>();
   const walletAddrRef = useRef<HTMLInputElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
@@ -52,7 +85,6 @@ export default function NewInscriptionPage() {
 
   return (
     <Form
-      action="/inscription/new"
       method="post"
       style={{
         display: "flex",
@@ -111,5 +143,52 @@ export default function NewInscriptionPage() {
         </button>
       </div>
     </Form>
+  );
+}
+
+
+
+
+
+
+
+export default function Inscription() {
+  //const user = useOptionalUser();
+  const data = useLoaderData<typeof loader>();
+  //const user = useUser();
+  
+
+  return (
+    <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
+      <div className="relative sm:pb-16 sm:pt-8">
+        
+	<div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
+            <div className="absolute inset-0">
+              <div className="absolute inset-0 bg-[color:rgba(254,204,27,0.5)] mix-blend-multiply" />
+            </div>
+            <div className="relative px-4 pb-8 pt-16 sm:px-6 sm:pb-14 sm:pt-24 lg:px-8 lg:pb-20 lg:pt-32">
+              <h1 className="text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
+                <span className="block text-yellow-500 drop-shadow-md">
+                  DogeCoin - Inscription
+                </span>
+              </h1>
+              <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
+                <NewInscriptionForm /> 
+              </div>
+
+	      <hr className="my-4" />
+
+	      <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
+                <InscriptionListPage inscriptionList={data.inscriptionList} />
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
   );
 }

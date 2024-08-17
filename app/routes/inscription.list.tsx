@@ -26,7 +26,7 @@ export default function InscriptionListPage({ inscriptionList }: any[]) {
                     className={({ isActive }) =>
                       `block border-b p-4 text-xl truncate ${isActive ? "bg-white" : ""}`
                     }
-                    to={`inscription/${inscription.hash}`} 
+                    to={inscription.hash} 
 		    target="_blank"
                   >
                     {`${inscription.timestamp}: ${inscription.hash}`}
