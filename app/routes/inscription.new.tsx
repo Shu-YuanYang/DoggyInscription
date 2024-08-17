@@ -3,10 +3,11 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 
-import { createNote } from "~/models/note.server";
+import { getTest } from "~/models/inscription.server";
 import { requireUserId } from "~/session.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  /*
   const userId = await requireUserId(request);
 
   const formData = await request.formData();
@@ -26,10 +27,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       { status: 400 },
     );
   }
-
-  const note = await createNote({ body, title, userId });
+  */
+  //const note = await createNote({ body, title, userId });
+  const test_result = await getTest(request);
 
   return redirect(`/`);
+  //return test_result;
 };
 
 export default function NewInscriptionPage() {
@@ -47,6 +50,7 @@ export default function NewInscriptionPage() {
 
   return (
     <Form
+      action="/inscription/new"
       method="post"
       style={{
         display: "flex",
