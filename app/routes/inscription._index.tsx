@@ -62,7 +62,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json(
 	{ success: { message: "text successfully inscribed!" } },
 	{ status: 200 }
-	); //redirect("/inscription");
+	);
 };
 
 export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
@@ -174,9 +174,7 @@ function NewInscriptionForm() {
 
 
 export default function Inscription() {
-  //const user = useOptionalUser();
   const data = useLoaderData<typeof loader>();
-  //const user = useUser();
   
 
   return (

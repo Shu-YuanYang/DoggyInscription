@@ -1,9 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-//import { useEffect } from "react";
 import { json, redirect } from "@remix-run/node";
-//import { useOptionalUser } from "~/utils";
-//import { requireUserId } from "~/session.server";
 import { getAllFakeInscriptionList } from "~/models/inscription.server";
 
 import NewInscriptionPage from "./inscription.new";
