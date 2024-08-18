@@ -16,7 +16,6 @@ import DogeHeader from "./doge_header";
 
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  //const userId = await requireUserId(request);
   invariant(params.inscriptionId, "inscriptionId not found");
 
   const inscription = await getFakeInscription({ hash: params.inscriptionId });
