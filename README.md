@@ -9,8 +9,63 @@ Created with:
 npx create-remix@latest --template remix-run/indie-stack
 ```
 
-## What's in the stack
+## Quickstart
 
+Click this button to create a [Gitpod](https://gitpod.io) workspace with the project set up and Fly pre-installed
+
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/remix-run/indie-stack/tree/main)
+
+## Local Testing
+
+- Initial setup:
+  ```sh
+  npm install
+  ```
+  
+  ```sh
+  npm run setup
+  ```
+
+- Start dev server:
+
+  ```sh
+  npm run dev
+  ```
+
+- The terminal/command line will display the web address served. Navigate to the given address in your local browser:
+  ```sh
+  Example display:
+  [remix-serve] http://localhost:3000 (http://172.23.55.95:3000)
+  ```
+
+- Use the following wallet address to test the inscription interface (hardcoded, other addresses will not work):
+  ```sh
+  DK24VY9rop9NoHaM8iBAUTNAkVgRXuChVa
+  ```
+
+- To clean up the mock transaction data, stop the app and enter the following command in the project folder:
+  ```sh
+  npx prisma db seed
+  ```
+
+This runs the app in development mode, rebuilding assets on file changes.
+  
+### Considerations & Notes:
+- For ease of testing, I have kept the .env file available:
+  ```sh
+  DATABASE_URL="file:./data.db?connection_limit=1"
+  SESSION_SECRET="47f3287bb4d7bd4959dd753cdb3cc3ef"
+  ```
+- The inscripion interface displays all transactions on file for ease of validation. In real projects, the program should consider:
+  1. Validate user data and allow users to only see their own transaction records.
+  2. Display only, say, top 100 recent transactions on page load. Complete data should be displayed in a separate, paginated dashboard.
+
+- I used sqlite to store mock inscription transaction data in this demo assignment. In real blockchain applications, we should consider:
+  1. Saving only the hash data from user transactions in DB, and querying the transaction details directly from the blockchain when requested.
+
+- We may also need to consider having the inscription interface support bulk inscriptions, for system efficiency.
+
+## What's in the stack
 - [Fly app deployment](https://fly.io) with [Docker](https://www.docker.com/)
 - Production-ready [SQLite Database](https://sqlite.org)
 - Healthcheck endpoint for [Fly backups region fallbacks](https://fly.io/docs/reference/configuration/#services-http_checks)
@@ -25,51 +80,10 @@ npx create-remix@latest --template remix-run/indie-stack
 - Linting with [ESLint](https://eslint.org)
 - Static Types with [TypeScript](https://typescriptlang.org)
 
-Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --template your/repo`! Make it your own.
-
-## Quickstart
-
-Click this button to create a [Gitpod](https://gitpod.io) workspace with the project set up and Fly pre-installed
-
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/remix-run/indie-stack/tree/main)
-
-## Development
-
-- Initial setup:
-  ```sh
-  npm install
-  ```
-
-- Create a .env file with the following test content:
-  ```sh
-  DATABASE_URL="file:./data.db?connection_limit=1"
-  SESSION_SECRET="47f3287bb4d7bd4959dd753cdb3cc3ef"
-  ```
-  
-  ```sh
-  npm run setup
-  ```
-
-- Start dev server:
-
-  ```sh
-  npm run dev
-  ```
-
-This starts your app in development mode, rebuilding assets on file changes.
-
-The database seed script creates a new user with some data you can use to get started:
-
-- Email: `rachel@remix.run`
-- Password: `racheliscool`
-
 ### Relevant code:
 
-This is a pretty simple note-taking app, but it's a good example of how you can build a full stack app with Prisma and Remix. The main functionality is creating users, logging in and out, and creating and deleting notes.
-
-- creating users, and logging in and out [./app/models/user.server.ts](./app/models/user.server.ts)
-- user sessions, and verifying them [./app/session.server.ts](./app/session.server.ts)
-- creating, and deleting notes [./app/models/note.server.ts](./app/models/note.server.ts)
+CRUD operations are programmed in the following file:
+- FakeWallet, and FakeInscription data: [./app/models/inscription.server.ts]
 
 ## Deployment
 
@@ -138,38 +152,7 @@ If you run into any issues deploying to Fly, make sure you've followed all of th
 
 ## GitHub Actions
 
-We use GitHub Actions for continuous integration and deployment. Anything that gets into the `main` branch will be deployed to production after running tests/build/etc. Anything in the `dev` branch will be deployed to staging.
-
-## Testing
-
-### Cypress
-
-We use Cypress for our End-to-End tests in this project. You'll find those in the `cypress` directory. As you make changes, add to an existing file or create a new file in the `cypress/e2e` directory to test your changes.
-
-We use [`@testing-library/cypress`](https://testing-library.com/cypress) for selecting elements on the page semantically.
-
-To run these tests in development, run `npm run test:e2e:dev` which will start the dev server for the app as well as the Cypress client. Make sure the database is running in docker as described above.
-
-We have a utility for testing authenticated features without having to go through the login flow:
-
-```ts
-cy.login();
-// you are now logged in as a new user
-```
-
-We also have a utility to auto-delete the user at the end of your test. Just make sure to add this in each test file:
-
-```ts
-afterEach(() => {
-  cy.cleanupUser();
-});
-```
-
-That way, we can keep your local db clean and keep your tests isolated from one another.
-
-### Vitest
-
-For lower level tests of utilities and individual components, we use `vitest`. We have DOM-specific assertion helpers via [`@testing-library/jest-dom`](https://testing-library.com/jest-dom).
+None
 
 ### Type Checking
 
@@ -181,4 +164,4 @@ This project uses ESLint for linting. That is configured in `.eslintrc.js`.
 
 ### Formatting
 
-We use [Prettier](https://prettier.io/) for auto-formatting in this project. It's recommended to install an editor plugin (like the [VSCode Prettier plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)) to get auto-formatting on save. There's also a `npm run format` script you can run to format all files in the project.
+This project uses [Prettier](https://prettier.io/) for auto-formatting in this project. It's recommended to install an editor plugin (like the [VSCode Prettier plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)) to get auto-formatting on save. There's also a `npm run format` script you can run to format all files in the project.
