@@ -154,6 +154,8 @@ If you run into any issues deploying to Fly, make sure you've followed all of th
 
 None
 
+## Other Tools
+
 ### Type Checking
 
 This project uses TypeScript. It's recommended to get TypeScript set up for your editor to get a really great in-editor experience with type checking and auto-complete. To run type checking across the whole project, run `npm run typecheck`.
