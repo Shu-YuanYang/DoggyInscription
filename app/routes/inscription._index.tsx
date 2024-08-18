@@ -4,7 +4,7 @@ import { Link, Form, useLoaderData, useActionData } from "@remix-run/react";
 
 import type { FakeWallet } from "@prisma/client";
 import { getAllFakeInscriptionList, getFakeWallet, createFakeInscription } from "~/models/inscription.server";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import InscriptionListPage from "./inscription.list";
 import DogeHeader from "./doge_header";
@@ -59,7 +59,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
 
-  return json({ status: 200 }); //redirect("/inscription");
+  return json(
+	{ success: { message: "text successfully inscribed!" } },
+	{ status: 200 }
+	); //redirect("/inscription");
 };
 
 export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
@@ -72,6 +75,8 @@ function NewInscriptionForm() {
   const actionData = useActionData<typeof action>();
   const walletAddrRef = useRef<HTMLInputElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
+  const [textVal, setTextVal] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
     if (actionData?.errors?.walletAddr) {
@@ -79,6 +84,12 @@ function NewInscriptionForm() {
     } else if (actionData?.errors?.text) {
       textRef.current?.focus();
     }
+
+    if (actionData?.success?.message) {
+	setTextVal("");
+    }
+
+    setIsRunning(false);
   }, [actionData]);
 
   return (
@@ -90,10 +101,11 @@ function NewInscriptionForm() {
         gap: 8,
         width: "100%",
       }}
+      onSubmit={() => setIsRunning(true)}
     >
       <div>
         <label className="flex w-full flex-col">
-          <span className="text-lg font-bold">Wallet Address: </span>
+          <span className="text-lg font-bold">Wallet Address (A 300 DOGE gas fee will be charged per inscription):</span>
           <input
             ref={walletAddrRef}
             name="walletAddr"
@@ -117,6 +129,8 @@ function NewInscriptionForm() {
           <span className="text-lg font-bold">Text: </span>
           <textarea
             ref={textRef}
+	    value={textVal}
+	    onChange={(e) => setTextVal(e.target.value)}
             name="text"
             rows={5}
             className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
@@ -134,14 +148,21 @@ function NewInscriptionForm() {
         ) : null}
       </div>
 
-      <div className="text-right">
-        <button
-          type="submit"
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-        >
-          Inscribe
-        </button>
-      </div>
+	<div className="flex justify-between">
+		{isRunning? 
+		<button type="submit" 
+			className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600 focus:bg-gray-400" 
+			disabled={true}
+		>Inscribing...</button> :
+		<button
+			type="submit"
+			className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+		>Inscribe</button>
+		}
+		{actionData?.success?.message?
+                        (<span className="text-green-700">{actionData.success.message}</span>) : null
+                }
+	</div>
     </Form>
   );
 }
