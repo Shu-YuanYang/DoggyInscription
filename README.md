@@ -61,6 +61,10 @@ This runs the app in development mode, rebuilding assets on file changes.
   DATABASE_URL="file:./data.db?connection_limit=1"
   SESSION_SECRET="47f3287bb4d7bd4959dd753cdb3cc3ef"
   ```
+
+- Front-end design:
+  1. Attempted to closely match the company color scheme, from website: https://doggyfi.xyz
+  
 - The inscripion interface displays all transactions on file for ease of validation. In real projects, the program should consider:
   1. Validate user data and allow users to only see their own transaction records.
   2. Display only, say, top 100 recent transactions on page load. Complete data should be displayed in a separate, paginated dashboard.
