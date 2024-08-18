@@ -9,13 +9,9 @@ Created with:
 npx create-remix@latest --template remix-run/indie-stack
 ```
 
-## Quickstart
+## Handbook
 
-Click this button to create a [Gitpod](https://gitpod.io) workspace with the project set up and Fly pre-installed
-
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/remix-run/indie-stack/tree/main)
-
-## Local Testing
+### Local Testing
 
 - Initial setup:
   ```sh
@@ -49,7 +45,16 @@ Click this button to create a [Gitpod](https://gitpod.io) workspace with the pro
   ```
 
 This runs the app in development mode, rebuilding assets on file changes.
-  
+
+### Relevant code:
+
+- CRUD operations are programmed in the following file:
+  1. FakeWallet, and FakeInscription data: [./app/models/inscription.server.ts]
+
+- Inscription front-end logic:
+  1. Main interface: [./app/routes/inscription._index.tsx, ./app/routes/inscription.list.tsx]
+  2. Inscription details: [./app/routes/inscription.$inscriptionId.tsx]
+
 ### Considerations & Notes:
 - For ease of testing, I have kept the .env file available:
   ```sh
@@ -79,11 +84,6 @@ This runs the app in development mode, rebuilding assets on file changes.
 - Code formatting with [Prettier](https://prettier.io)
 - Linting with [ESLint](https://eslint.org)
 - Static Types with [TypeScript](https://typescriptlang.org)
-
-### Relevant code:
-
-CRUD operations are programmed in the following file:
-- FakeWallet, and FakeInscription data: [./app/models/inscription.server.ts]
 
 ## Deployment
 
