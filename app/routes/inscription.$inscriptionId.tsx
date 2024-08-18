@@ -11,6 +11,10 @@ import invariant from "tiny-invariant";
 import { getFakeInscription } from "~/models/inscription.server";
 import { requireUserId } from "~/session.server";
 
+import DogeHeader from "./doge_header";
+
+
+
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   //const userId = await requireUserId(request);
   invariant(params.inscriptionId, "inscriptionId not found");
@@ -28,18 +32,40 @@ export default function InscriptionDetailsPage() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <div>
-      <h3 className="text-2xl font-bold">Inscription at: {data.inscription.timestamp}</h3>
-      <span className="py-6">Wallet Address: {data.inscription.walletAddr}</span>
-      <br />
-      <span className="py-6">Inscription Type: {data.inscription.type}</span>
-      <br />
-      <span className="py-6">Inscribed Data:</span>
-      <p className="">{data.inscription.data.toString()}</p>
-      <span>Transaction Fee: {data.inscription.gasFee}</span>
-      <br />
-      <span className="py-6">Transaction Hash: {data.inscription.hash}</span>
-      <hr className="my-4" />
+    <div className="flex h-full min-h-screen flex-col bg-zinc-100">
+	<main className="relative w-full bg-zinc-100 sm:items-center sm:justify-center" style={{ height: "88%" }}>
+	    <DogeHeader pageTitle="Inscription Details" />
+
+	    <div className="h-full mx-auto max-w-8xl pt-3 sm:px-6">
+		<h3 className="text-2xl font-bold">Inscription at: {data.inscription.timestamp}</h3>
+		<span className="py-6 text-lg">Wallet Address: {data.inscription.walletAddr}</span>
+		<br />
+		<span className="py-6 text-lg">Inscription Type: {data.inscription.type}</span>
+		<br />
+		<span className="py-6 text-lg">Transaction Fee: {data.inscription.gasFee}</span>
+		<br />
+		<span className="py-6 text-lg">Transaction Hash: {data.inscription.hash}</span>
+		<br />
+		{/*
+		<span className="py-6 text-lg">Inscribed Data:</span>
+                <p className="text-lg">{data.inscription.data.toString()}</p>
+		*/}
+		<label className="flex w-full flex-col">
+			<span className="text-lg">Inscribed Data: </span>
+			<textarea
+				disabled={true}
+				name="text"
+				rows={10}
+				className="w-full flex-1 rounded-md border-2 px-3 py-2 text-lg leading-6"
+				placeholder="Enter text to inscribe"
+				aria-invalid={undefined}
+				aria-errormessage={undefined}
+				value={data.inscription.data.toString()}
+			/>
+		</label> 
+		<hr className="my-4" />
+	    </div>
+	</main>
     </div>
   );
 }

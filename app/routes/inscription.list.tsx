@@ -7,25 +7,23 @@ import { Form, Link, NavLink, useLoaderData } from "@remix-run/react";
 export default function InscriptionListPage({ inscriptionList }: any[]) {
 
   return (
-    <div className="flex h-full w-full flex-col" style={{
+    <div className="flex h-full max-h-full w-full flex-col" style={{
         display: "flex",
-        flexDirection: "column",
-        gap: 8
+        flexDirection: "column"
       }}>
       
-      <span>Recent Inscriptions:</span>
-      <main className="flex h-full w-full bg-white">
-        <div className="h-full w-full border-r bg-gray-50">
-	  <br />          
+      <span className="text-lg font-bold mb-1">Recent Inscriptions:</span>
+      <main className="flex h-4/5 w-full overflow-y-scroll">
+        <div className="w-full border-r">
           {!inscriptionList || inscriptionList.length === 0 ? (
-            <p className="p-4">No inscriptions yet</p>
+            <span className="text-base">No inscriptions yet</span>
           ) : (
             <ol>
               {inscriptionList.map((inscription) => (
-                <li key={inscription.hash}>
+                <li key={inscription.hash} className="border-b">
                   <NavLink
                     className={({ isActive }) =>
-                      `block border-b p-4 text-xl truncate ${isActive ? "bg-white" : ""}`
+                      `text-sm text-blue-400 truncate ${isActive ? "" : ""}`
                     }
                     to={inscription.hash} 
 		    target="_blank"

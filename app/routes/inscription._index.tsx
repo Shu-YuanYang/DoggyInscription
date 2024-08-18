@@ -6,9 +6,8 @@ import type { FakeWallet } from "@prisma/client";
 import { getAllFakeInscriptionList, getFakeWallet, createFakeInscription } from "~/models/inscription.server";
 import { useEffect, useRef } from "react";
 
-//import NewInscriptionPage from "./inscription.new";
 import InscriptionListPage from "./inscription.list";
-
+import DogeHeader from "./doge_header";
 
 
 
@@ -93,12 +92,13 @@ function NewInscriptionForm() {
       }}
     >
       <div>
-        <label className="flex w-full flex-col gap-1">
-          <span>Wallet Address: </span>
+        <label className="flex w-full flex-col">
+          <span className="text-lg font-bold">Wallet Address: </span>
           <input
             ref={walletAddrRef}
             name="walletAddr"
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+	    placeholder="Enter wallet address"
             aria-invalid={actionData?.errors?.walletAddr ? true : undefined}
             aria-errormessage={
               actionData?.errors?.walletAddr ? "wallet-addr-error" : undefined
@@ -113,13 +113,14 @@ function NewInscriptionForm() {
       </div>
 
       <div>
-        <label className="flex w-full flex-col gap-1">
-          <span>Text: </span>
+        <label className="flex w-full flex-col">
+          <span className="text-lg font-bold">Text: </span>
           <textarea
             ref={textRef}
             name="text"
-            rows={8}
+            rows={5}
             className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
+	    placeholder="Enter text to inscribe"
             aria-invalid={actionData?.errors?.text ? true : undefined}
             aria-errormessage={
               actionData?.errors?.text ? "text-error" : undefined
@@ -158,27 +159,26 @@ export default function Inscription() {
   
 
   return (
-    <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
-      <div className="relative sm:pb-16 sm:pt-8">
+
+  <div className="flex h-full min-h-screen flex-col bg-zinc-100">
+    <DogeHeader pageTitle="Inscription" />
+
+    <main className="relative w-full bg-zinc-100 sm:items-center sm:justify-center" style={{ height: "88%" }}>
+      <div className="relative h-full sm:pb-8">
         
-	<div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
+	<div className="h-full mx-auto max-w-8xl sm:px-6">
+          <div className="relative h-full shadow-xl sm:overflow-hidden sm:rounded-2xl">
             <div className="absolute inset-0">
-              <div className="absolute inset-0 bg-[color:rgba(254,204,27,0.5)] mix-blend-multiply" />
+              <div className="absolute inset-0 bg-white mix-blend-multiply" />
             </div>
-            <div className="relative px-4 pb-8 sm:px-6 sm:pb-14 lg:px-8 lg:pb-20">
-              <h1 className="text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
-                <span className="block text-yellow-500 drop-shadow-md">
-                  DogeCoin - Inscription
-                </span>
-              </h1>
-              <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
+            <div className="relative h-full px-4 sm:px-6 sm:pb-14 lg:px-8 lg:pb-4">
+              <div className="h-1/2 mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
                 <NewInscriptionForm /> 
               </div>
 
 	      <hr className="my-4" />
 
-	      <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
+	      <div className="h-2/5 mx-auto max-w-sm sm:flex sm:max-w-none sm:justify-center">
                 <InscriptionListPage inscriptionList={data.inscriptionList} />
               </div>
 
@@ -189,5 +189,7 @@ export default function Inscription() {
 
       </div>
     </main>
+
+  </div>
   );
 }
